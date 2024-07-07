@@ -1,0 +1,19 @@
+# Archivo de dependencias para el proyecto
+
+# NumPy es una biblioteca para el cálculo numérico en Python, esencial para operaciones matriciales y algebraicas.
+numpy==1.21.4
+
+# Pandas es una biblioteca para la manipulación y análisis de datos, proporcionando estructuras de datos y funciones de análisis.
+pandas==1.3.5
+
+# Uvicorn es un servidor ASGI rápido y ligero para la ejecución de aplicaciones web asíncronas en Python.
+uvicorn==0.22.0
+
+# FastAPI es un framework web moderno y de alto rendimiento para construir APIs con Python 3.7+ basado en estándares como OpenAPI y JSON Schema.
+fastapi==0.95.1
+
+# NLTK (Natural Language Toolkit) es una biblioteca para trabajar con procesamiento de lenguaje natural en Python.
+nltk==3.8.1
+
+# Scikit-learn es una biblioteca para aprendizaje automático en Python, ofreciendo diversas herramientas para modelado predictivo y análisis de datos.
+scikit-learn
