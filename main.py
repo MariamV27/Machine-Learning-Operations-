@@ -8,6 +8,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn import preprocessing
 from scipy.sparse import hstack
 from fastapi import FastAPI
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.neighbors import NearestNeighbors
+
 
 # Indicamos título y descripción de la API
 app = FastAPI(title='Machine-Learning-Operations-',
@@ -29,15 +32,44 @@ async def load_data():
     df = pd.read_excel('./Datos_transformados.xlsx')
 
     # Computa la matriz de recuento
-    cv = CountVectorizer(stop_words='english', max_features=5000)
-    count_matrix = cv.fit_transform(df_highly_rated['combined_features'])
+    #  cv = CountVectorizer(stop_words='english', max_features=5000)
+     # count_matrix = cv.fit_transform(df_highly_rated['combined_features'])
 
     # Crea un modelo NearestNeighbors
-    nn = NearestNeighbors(metric='cosine', algorithm='brute')
-    nn.fit(count_matrix)
+     # nn = NearestNeighbors(metric='cosine', algorithm='brute')
+     # nn.fit(count_matrix)
 
     # Crea un índice de títulos de películas
     indices = pd.Series(df_highly_rated.index, index=df_highly_rated['title']).drop_duplicates()
+
+    try:
+        # Cargar el DataFrame desde el archivo CSV
+        df_combined = pd.read_excel('./Datos_transformados.xlsx')
+
+        # Asegúrate de que la columna 'release_date' esté en formato datetime
+        df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
+
+        # Filtra las películas que fueron estrenadas en el mes especificado
+        peliculas_en_mes = df_combined[df_combined['release_date'].dt.month == mes_numero]
+
+        # Cuenta la cantidad de películas
+        cantidad_peliculas = peliculas_en_mes.shape[0]
+
+        return f"{cantidad_peliculas} películas fueron estrenadas en el mes de {mes.capitalize()}."
+
+    except FileNotFoundError:
+        print("Error: No se pudo encontrar el archivo xlsx.")
+        return None
+    except KeyError:
+        print("Error: La columna 'release_date' no está presente en el archivo CSV.")
+        return None
+    except ValueError as ve:
+        print(f"Error al convertir la fecha: {ve}")
+        return None
+    except Exception as ex:
+        print(f"Error inesperado: {ex}")
+        return None
+
 @app.get('/')
 async def read_root():
     return {'Mi primera API. Dirígite a /docs'}
@@ -48,6 +80,8 @@ async def about():
 
 @app.get('/peliculas_mes/({mes})')
 def cantidad_filmaciones_mes(mes):
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
+
     # Mapea los meses en español a sus equivalentes numéricos
     meses = {
         "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
@@ -112,6 +146,7 @@ async def about():
 
 @app.get('/peliculas_mes/({mes})')
 def cantidad_filmaciones_mes(mes):
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
     # Mapea los meses en español a sus equivalentes numéricos
     meses = {
         "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
@@ -125,40 +160,13 @@ def cantidad_filmaciones_mes(mes):
 
     mes_numero = meses[mes.lower()]
 
-    try:
-        # Cargar el DataFrame desde el archivo CSV
-        df_combined = pd.read_excel('./Datos_transformados.xlsx')
-
-        # Asegúrate de que la columna 'release_date' esté en formato datetime
-        df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
-
-        # Filtra las películas que fueron estrenadas en el mes especificado
-        peliculas_en_mes = df_combined[df_combined['release_date'].dt.month == mes_numero]
-
-        # Cuenta la cantidad de películas
-        cantidad_peliculas = peliculas_en_mes.shape[0]
-
-        return f"{cantidad_peliculas} películas fueron estrenadas en el mes de {mes.capitalize()}."
-
-    except FileNotFoundError:
-        print("Error: No se pudo encontrar el archivo xlsx.")
-        return None
-    except KeyError:
-        print("Error: La columna 'release_date' no está presente en el archivo CSV.")
-        return None
-    except ValueError as ve:
-        print(f"Error al convertir la fecha: {ve}")
-        return None
-    except Exception as ex:
-        print(f"Error inesperado: {ex}")
-        return None
-
 # Ejemplo de uso
 print(cantidad_filmaciones_mes("julio"))
 
 #2do
 @app.get('/peliculas_dia/({dia})')
 def cantidad_dia_peliculas(dia: str) -> dict:
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
    
     # Creamos diccionario para normalizar los días en español a inglés
     days = {
@@ -188,6 +196,7 @@ print(resultado)
 
 @app.get('/titulo_filmacion/({filmacion})')
 def score_titulo(titulo_de_la_filmacion: str) -> str:
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
  
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
@@ -212,6 +221,7 @@ print(resultado)
 
 @app.get('/titulo_de_la_filmacion/({titulo_filmacion})')
 def votos_titulo(titulo_de_la_filmacion: str) -> str:
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
 
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
@@ -242,6 +252,7 @@ print(resultado)
 
 @app.get('/nombre_actor/({actor})')
 def get_actor(nombre_actor):
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
     # Filtrar el dataframe para obtener solo las filas donde el actor está presente
     df_actor = df_combined[df_combined['actors'].str.contains(nombre_actor, case=False, na=False)]
     
@@ -265,6 +276,7 @@ print(get_actor("Robin Williams"))
 
 @app.get('/nombre_director/({director})')
 def get_director(nombre_director):
+    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
     # Filtrar el DataFrame para obtener solo las filas del director dado
     director_data = df_combined[df_combined['director'] == nombre_director]
     
