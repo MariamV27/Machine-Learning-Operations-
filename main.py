@@ -29,7 +29,7 @@ async def load_data():
 
     # Carga los datos
     df_highly_rated = pd.read_excel('./Datos_transformados.xlsx')
-    df = pd.read_excel('./Datos_transformados.xlsx')
+    df = df_highly_rated
 
     # Computa la matriz de recuento
     #  cv = CountVectorizer(stop_words='english', max_features=5000)
@@ -68,9 +68,6 @@ def cantidad_filmaciones_mes(mes):
     mes_numero = meses[mes.lower()]
 
     try:
-        # Cargar el DataFrame desde el archivo CSV
-        df_combined = pd.read_excel('./Datos_transformados.xlsx')
-
         # Asegúrate de que la columna 'release_date' esté en formato datetime
         df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
 
