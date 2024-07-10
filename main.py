@@ -42,34 +42,6 @@ async def load_data():
     # Crea un índice de títulos de películas
     indices = pd.Series(df_highly_rated.index, index=df_highly_rated['title']).drop_duplicates()
 
-    try:
-        # Cargar el DataFrame desde el archivo CSV
-        df_combined = pd.read_excel('./Datos_transformados.xlsx')
-
-        # Asegúrate de que la columna 'release_date' esté en formato datetime
-        df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
-
-        # Filtra las películas que fueron estrenadas en el mes especificado
-        peliculas_en_mes = df_combined[df_combined['release_date'].dt.month == mes_numero]
-
-        # Cuenta la cantidad de películas
-        cantidad_peliculas = peliculas_en_mes.shape[0]
-
-        return f"{cantidad_peliculas} películas fueron estrenadas en el mes de {mes.capitalize()}."
-
-    except FileNotFoundError:
-        print("Error: No se pudo encontrar el archivo xlsx.")
-        return None
-    except KeyError:
-        print("Error: La columna 'release_date' no está presente en el archivo CSV.")
-        return None
-    except ValueError as ve:
-        print(f"Error al convertir la fecha: {ve}")
-        return None
-    except Exception as ex:
-        print(f"Error inesperado: {ex}")
-        return None
-
 @app.get('/')
 async def read_root():
     return {'Mi primera API. Dirígite a /docs'}
