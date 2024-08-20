@@ -23,6 +23,8 @@ count_matrix = None
 cosine_sim = None
 indices = None
 
+df_combined = pd.read_excel('./Datos_transformados.xlsx')
+
 @app.on_event("startup")
 async def load_data():
     global df_combined,df_highly_rated, cv, count_matrix, nn, indices
@@ -70,6 +72,7 @@ async def about():
 
 @app.get('/peliculas_mes/({mes})')
 def cantidad_filmaciones_mes(mes):
+    global df_combined
     # Mapea los meses en español a sus equivalentes numéricos
     meses = {
         "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
@@ -84,8 +87,6 @@ def cantidad_filmaciones_mes(mes):
     mes_numero = meses[mes.lower()]
 
     try:
-        # Cargar el DataFrame desde el archivo CSV
-        df_combined = pd.read_excel('./Datos_transformados.xlsx')
 
         # Asegúrate de que la columna 'release_date' esté en formato datetime
         df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
@@ -117,7 +118,7 @@ def cantidad_filmaciones_mes(mes):
 #2do
 @app.get('/peliculas_dia/({dia})')
 def cantidad_dia_peliculas(dia: str) -> dict:
-   
+    global df_combined
     # Creamos diccionario para normalizar los días en español a inglés
     days = {
         'lunes': 'Monday', 'martes': 'Tuesday','miercoles': 'Wednesday', 'jueves': 'Thursday', 'viernes': 'Friday', 'sábado': 'Saturday', 'domingo': 'Sunday'
@@ -130,8 +131,7 @@ def cantidad_dia_peliculas(dia: str) -> dict:
     if not day:
         return {'error': f"No se encontró información para el día '{dia}'"}
 
-    # Cargar el DataFrame desde el archivo CSV
-    df_combined = pd.read_excel('./Datos_transformados.xlsx')
+ 
 
     # Suponiendo que 'release_date' es una columna de tipo datetime en el DataFrame df
     # Filtramos el DataFrame para obtener las películas estrenadas en el día especificado
@@ -148,10 +148,10 @@ def cantidad_dia_peliculas(dia: str) -> dict:
 #print(resultado)
 
 @app.get('/titulo_filmacion/({filmacion})')
-def score_titulo(titulo_de_la_filmacion: str) -> str:
-     # Cargar el DataFrame desde el archivo CSV
-    df_combined = pd.read_excel('./Datos_transformados.xlsx')
 
+def score_titulo(titulo_de_la_filmacion: str) -> str:
+    global df_combined
+     
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
     
@@ -176,9 +176,8 @@ def score_titulo(titulo_de_la_filmacion: str) -> str:
 
 @app.get('/titulo_de_la_filmacion/({titulo_filmacion})')
 def votos_titulo(titulo_de_la_filmacion: str) -> str:
-
-     # Cargar el DataFrame desde el archivo CSV
-    df_combined = pd.read_excel('./Datos_transformados.xlsx')
+    global df_combined
+    
 
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
@@ -210,8 +209,8 @@ def votos_titulo(titulo_de_la_filmacion: str) -> str:
 
 @app.get('/nombre_actor/({actor})')
 def get_actor(nombre_actor):
-     # Cargar el DataFrame desde el archivo CSV
-    df_combined = pd.read_excel('./Datos_transformados.xlsx') 
+    global df_combined
+
  
     # Filtrar el dataframe para obtener solo las filas donde el actor está presente
     df_actor = df_combined[df_combined['actors'].str.contains(nombre_actor, case=False, na=False)]
@@ -236,8 +235,7 @@ def get_actor(nombre_actor):
 
 @app.get('/nombre_director/({director})')
 def get_director(nombre_director):
-     # Cargar el DataFrame desde el archivo CSV
-    df_combined = pd.read_excel('./Datos_transformados.xlsx') 
+    global df_combined
 
     # Filtrar el DataFrame para obtener solo las filas del director dado
     director_data = df_combined[df_combined['director'] == nombre_director]
