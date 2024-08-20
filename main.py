@@ -50,47 +50,47 @@ async def read_root():
 async def about():
     return {'Proyecto individual Nº1: Recomendacion de peliculas'}
 
-@app.get('/peliculas_mes/({mes})')
-def cantidad_filmaciones_mes(mes):
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
-
-    # Mapea los meses en español a sus equivalentes numéricos
-    meses = {
-        "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
-        "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
-        "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12
-    }
-
-    # Verifica si el mes ingresado es válido
-    if mes.lower() not in meses:
-        raise ValueError("El mes ingresado no es válido. Por favor ingrese un mes en español.")
-
-    mes_numero = meses[mes.lower()]
-
-    try:
-        # Asegúrate de que la columna 'release_date' esté en formato datetime
-        df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
-
-        # Filtra las películas que fueron estrenadas en el mes especificado
-        peliculas_en_mes = df_combined[df_combined['release_date'].dt.month == mes_numero]
-
-        # Cuenta la cantidad de películas
-        cantidad_peliculas = peliculas_en_mes.shape[0]
-
-        return f"{cantidad_peliculas} películas fueron estrenadas en el mes de {mes.capitalize()}."
-
-    except FileNotFoundError:
-        print("Error: No se pudo encontrar el archivo xlsx.")
-        return None
-    except KeyError:
-        print("Error: La columna 'release_date' no está presente en el archivo CSV.")
-        return None
-    except ValueError as ve:
-        print(f"Error al convertir la fecha: {ve}")
-        return None
-    except Exception as ex:
-        print(f"Error inesperado: {ex}")
-        return None
+#@app.get('/peliculas_mes/({mes})')
+#def cantidad_filmaciones_mes(mes):
+#    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
+#
+#    # Mapea los meses en español a sus equivalentes numéricos
+#    meses = {
+#        "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
+#        "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
+#        "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12
+#    }
+#
+#    # Verifica si el mes ingresado es válido
+#    if mes.lower() not in meses:
+#        raise ValueError("El mes ingresado no es válido. Por favor ingrese un mes en español.")
+#
+#    mes_numero = meses[mes.lower()]
+#
+#    try:
+#        # Asegúrate de que la columna 'release_date' esté en formato datetime
+#        df_combined['release_date'] = pd.to_datetime(df_combined['release_date'], errors='coerce')
+#
+#        # Filtra las películas que fueron estrenadas en el mes especificado
+#        peliculas_en_mes = df_combined[df_combined['release_date'].dt.month == mes_numero]
+#
+#        # Cuenta la cantidad de películas
+#        cantidad_peliculas = peliculas_en_mes.shape[0]
+#
+#        return f"{cantidad_peliculas} películas fueron estrenadas en el mes de {mes.capitalize()}."
+#
+#    except FileNotFoundError:
+#        print("Error: No se pudo encontrar el archivo xlsx.")
+#        return None
+#    except KeyError:
+#        print("Error: La columna 'release_date' no está presente en el archivo CSV.")
+#        return None
+#    except ValueError as ve:
+#        print(f"Error al convertir la fecha: {ve}")
+#        return None
+#    except Exception as ex:
+#        print(f"Error inesperado: {ex}")
+#        return None
 
 # Ejemplo de uso
 print(cantidad_filmaciones_mes("julio"))
