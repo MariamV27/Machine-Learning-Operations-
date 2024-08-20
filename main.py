@@ -117,7 +117,6 @@ def cantidad_filmaciones_mes(mes):
 #2do
 @app.get('/peliculas_dia/({dia})')
 def cantidad_dia_peliculas(dia: str) -> dict:
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
    
     # Creamos diccionario para normalizar los días en español a inglés
     days = {
@@ -130,6 +129,9 @@ def cantidad_dia_peliculas(dia: str) -> dict:
     # Verificamos si el día proporcionado es válido
     if not day:
         return {'error': f"No se encontró información para el día '{dia}'"}
+
+    # Cargar el DataFrame desde el archivo CSV
+    df_combined = pd.read_excel('./Datos_transformados.xlsx')
 
     # Suponiendo que 'release_date' es una columna de tipo datetime en el DataFrame df
     # Filtramos el DataFrame para obtener las películas estrenadas en el día especificado
