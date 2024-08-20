@@ -160,8 +160,8 @@ def cantidad_dia_peliculas(dia: str) -> dict:
     return {'dia': dia, 'cantidad de peliculas': cantidad_peliculas}
 
 
-resultado = cantidad_dia_peliculas('miercoles')
-print(resultado)
+#resultado = cantidad_dia_peliculas('miercoles')
+#print(resultado)
 
 @app.get('/titulo_filmacion/({filmacion})')
 def score_titulo(titulo_de_la_filmacion: str) -> str:
@@ -185,8 +185,8 @@ def score_titulo(titulo_de_la_filmacion: str) -> str:
     return respuesta
 
 
-resultado = score_titulo("Jumanji")
-print(resultado)
+#resultado = score_titulo("Jumanji")
+#print(resultado)
 
 @app.get('/titulo_de_la_filmacion/({titulo_filmacion})')
 def votos_titulo(titulo_de_la_filmacion: str) -> str:
@@ -216,8 +216,8 @@ def votos_titulo(titulo_de_la_filmacion: str) -> str:
     
     return respuesta
 
-resultado = votos_titulo("Jumanji")
-print(resultado)
+#resultado = votos_titulo("Jumanji")
+#print(resultado)
 
 @app.get('/nombre_actor/({actor})')
 def get_actor(nombre_actor):
@@ -241,7 +241,7 @@ def get_actor(nombre_actor):
     return mensaje
 
 #Ejemplo de uso:
-print(get_actor("Robin Williams"))
+#print(get_actor("Robin Williams"))
 
 @app.get('/nombre_director/({director})')
 def get_director(nombre_director):
@@ -275,5 +275,5 @@ def get_director(nombre_director):
     }
     
     return result
-nombre_director = 'John Lasseter'
-print(get_director(nombre_director))
+#nombre_director = 'John Lasseter'
+#print(get_director(nombre_director))
