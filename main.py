@@ -210,7 +210,9 @@ def votos_titulo(titulo_de_la_filmacion: str) -> str:
 
 @app.get('/nombre_actor/({actor})')
 def get_actor(nombre_actor):
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
+     # Cargar el DataFrame desde el archivo CSV
+    df_combined = pd.read_excel('./Datos_transformados.xlsx') 
+ 
     # Filtrar el dataframe para obtener solo las filas donde el actor está presente
     df_actor = df_combined[df_combined['actors'].str.contains(nombre_actor, case=False, na=False)]
     
