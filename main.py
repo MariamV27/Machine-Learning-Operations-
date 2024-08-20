@@ -236,7 +236,9 @@ def get_actor(nombre_actor):
 
 @app.get('/nombre_director/({director})')
 def get_director(nombre_director):
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
+     # Cargar el DataFrame desde el archivo CSV
+    df_combined = pd.read_excel('./Datos_transformados.xlsx') 
+
     # Filtrar el DataFrame para obtener solo las filas del director dado
     director_data = df_combined[df_combined['director'] == nombre_director]
     
