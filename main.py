@@ -93,7 +93,7 @@ async def about():
 #        return None
 
 # Ejemplo de uso
-print(cantidad_filmaciones_mes("julio"))
+#print(cantidad_filmaciones_mes("julio"))
 
 @app.get('/')
 async def read_root():
@@ -130,7 +130,7 @@ def cantidad_filmaciones_mes(mes):
     mes_numero = meses[mes.lower()]
 
 # Ejemplo de uso
-print(cantidad_filmaciones_mes("julio"))
+#print(cantidad_filmaciones_mes("julio"))
 
 #2do
 @app.get('/peliculas_dia/({dia})')
