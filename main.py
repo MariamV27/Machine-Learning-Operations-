@@ -149,8 +149,9 @@ def cantidad_dia_peliculas(dia: str) -> dict:
 
 @app.get('/titulo_filmacion/({filmacion})')
 def score_titulo(titulo_de_la_filmacion: str) -> str:
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
- 
+     # Cargar el DataFrame desde el archivo CSV
+    df_combined = pd.read_excel('./Datos_transformados.xlsx')
+
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
     
@@ -169,12 +170,15 @@ def score_titulo(titulo_de_la_filmacion: str) -> str:
     return respuesta
 
 
+
 #resultado = score_titulo("Jumanji")
 #print(resultado)
 
 @app.get('/titulo_de_la_filmacion/({titulo_filmacion})')
 def votos_titulo(titulo_de_la_filmacion: str) -> str:
-    global df_combined,df_highly_rated, cv, count_matrix, nn, indices
+
+     # Cargar el DataFrame desde el archivo CSV
+    df_combined = pd.read_excel('./Datos_transformados.xlsx')
 
     # Filtramos el dataframe por el título de la filmación
     pelicula = df_combined[df_combined['title'].str.lower() == titulo_de_la_filmacion.lower()]
@@ -199,6 +203,7 @@ def votos_titulo(titulo_de_la_filmacion: str) -> str:
                  f"con un promedio de {promedio_votos}.")
     
     return respuesta
+
 
 #resultado = votos_titulo("Jumanji")
 #print(resultado)
